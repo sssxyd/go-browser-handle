@@ -3,6 +3,7 @@ package handle
 import (
 	"fmt"
 	"log"
+	"os/exec"
 	"sync"
 	"time"
 
@@ -20,6 +21,23 @@ type EdgeBrowser struct {
 	locker   sync.Mutex
 }
 
+// startNewEdge 启动新的 Edge 实例
+func startNewEdge(edgePath, port string) (*exec.Cmd, error) {
+	cmd := exec.Command(edgePath,
+		"--new-window",
+		"about:blank",
+		"--remote-debugging-address=127.0.0.1",
+		"--remote-debugging-port="+port,
+		"--remote-allow-origins=http://127.0.0.1:"+port)
+	log.Printf("启动 Edge 浏览器: %s", cmd.String())
+	err := cmd.Start()
+	if err != nil {
+		return nil, fmt.Errorf("无法启动 Edge 浏览器: %v", err)
+	}
+	log.Printf("Edge 浏览器已启动，调试端口: %s", port)
+	return cmd, nil
+}
+
 func newEdgeBrowser(edgePath string, debugPort int) (*EdgeBrowser, error) {
 	// 1. 自动安装 Playwright 驱动
 	if err := playwright.Install(); err != nil {
@@ -33,10 +51,10 @@ func newEdgeBrowser(edgePath string, debugPort int) (*EdgeBrowser, error) {
 	}
 
 	// 3. 尝试连接到已运行的 Edge 实例
-	browser, found := connectToExistingEdge(pw, fmt.Sprintf("%d", debugPort))
+	browser, found := connect_to_exist_edge(pw, fmt.Sprintf("%d", debugPort))
 	if !found {
 		// 如果没有找到已运行的 Edge 实例，则关闭所有 Edge 进程并启动一个新实例
-		err = killEdgeProcesses()
+		err = kill_edge_processes()
 		if err != nil {
 			pw.Stop()
 			return nil, fmt.Errorf("无法关闭 Edge 进程: %v", err)
@@ -54,7 +72,7 @@ func newEdgeBrowser(edgePath string, debugPort int) (*EdgeBrowser, error) {
 		log.Printf("Edge 浏览器已通过系统命令启动，调试端口: %d\n", debugPort)
 
 		// 连接到新启动的 Edge 实例
-		browser, found = connectToExistingEdge(pw, fmt.Sprintf("%d", debugPort))
+		browser, found = connect_to_exist_edge(pw, fmt.Sprintf("%d", debugPort))
 		if !found {
 			pw.Stop()
 			return nil, fmt.Errorf("无法连接到新启动的 Edge 实例")

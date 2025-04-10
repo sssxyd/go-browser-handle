@@ -9,14 +9,14 @@ import (
 )
 
 var (
-	port    int = 9527
+	port    int = 9812
 	browser handle.Browser
 )
 
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile) // 时间戳 + 文件名行号
 
-	edge, err := handle.StartEdgeBrowser(port)
+	edge, err := handle.Edge().Listen(port)
 	if err != nil {
 		panic(err)
 	}

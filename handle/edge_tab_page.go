@@ -48,7 +48,7 @@ func (t *EdgeTabPage) URL() string {
 
 func (t *EdgeTabPage) Domain() string {
 	url := t.URL()
-	domain, err := extractDomainFromUrl(url)
+	domain, err := extract_domain_from_url(url)
 	if err != nil {
 		log.Printf("Failed to extract domain from URL: %s", url)
 		return ""
