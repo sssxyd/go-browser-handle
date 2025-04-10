@@ -1,4 +1,4 @@
-package test
+package handle_test
 
 import (
 	"log"
@@ -16,7 +16,7 @@ var (
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile) // 时间戳 + 文件名行号
 
-	edge, err := handle.GetEdgeBrowser(port)
+	edge, err := handle.StartEdgeBrowser(port)
 	if err != nil {
 		panic(err)
 	}
