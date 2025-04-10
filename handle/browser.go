@@ -9,6 +9,7 @@ type TabPage interface {
 	Title() string
 	URL() string
 	Domain() string
+	Close()
 	IsClosed() bool
 	BringToFront()
 	OpenInNewTab(id string, action func() error, timeout float64) TabPage
@@ -26,6 +27,7 @@ type Browser interface {
 	Port() int
 	TabPages() []TabPage
 	NewTabPage(id string, url string) TabPage
+	DefaultPage() TabPage
 	FindTabPage(id string) TabPage
 	SwitchToTabPage(id string) error
 	CloseTabPage(id string) error

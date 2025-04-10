@@ -262,3 +262,7 @@ func (t *EdgeTabPage) Goto(url string) error {
 func (t *EdgeTabPage) Evaluate(expression string, arg ...any) (any, error) {
 	return t.page.Evaluate(expression, arg...)
 }
+
+func (t *EdgeTabPage) Close() {
+	t.browser.removeTabPage(t.id)
+}

@@ -32,15 +32,19 @@ func dispose() {
 func TestVisitYFW(t *testing.T) {
 	t.Cleanup(dispose)
 
-	page := browser.FindTabPage("default")
+	page := browser.DefaultPage()
 	if page == nil {
-		panic("未找到默认标签页")
+		t.Fatalf("未找到默认标签页")
 	}
+
 	page.BringToFront()
+
 	time.Sleep(5 * time.Second)
-	page.Goto("https://www.yaofangwang.com/")
+	if err := page.Goto("https://www.yaofangwang.com/"); err != nil {
+		t.Fatalf("访问页面失败: %v", err)
+	}
 	time.Sleep(5 * time.Second)
-	browser.CloseTabPage(page.ID())
+	page.Close()
 	time.Sleep(2 * time.Second)
 	browser.Close()
 }

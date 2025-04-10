@@ -181,6 +181,10 @@ func (b *EdgeBrowser) NewTabPage(id string, url string) TabPage {
 	return tabPage
 }
 
+func (b *EdgeBrowser) DefaultPage() TabPage {
+	return b.FindTabPage("default")
+}
+
 func (b *EdgeBrowser) FindTabPage(id string) TabPage {
 	for _, page := range b.tabPages {
 		if page.ID() == id {
