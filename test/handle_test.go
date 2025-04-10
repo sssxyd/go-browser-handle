@@ -1,0 +1,46 @@
+package test
+
+import (
+	"log"
+	"testing"
+	"time"
+
+	"github.com/sssxyd/go-browser-handle/handle"
+)
+
+var (
+	port    int = 9527
+	browser handle.Browser
+)
+
+func init() {
+	log.SetFlags(log.LstdFlags | log.Lshortfile) // 时间戳 + 文件名行号
+
+	edge, err := handle.GetEdgeBrowser(port)
+	if err != nil {
+		panic(err)
+	}
+	browser = edge
+}
+
+func dispose() {
+	if browser != nil {
+		browser.Close()
+	}
+}
+
+func TestVisitYFW(t *testing.T) {
+	t.Cleanup(dispose)
+
+	page := browser.FindTabPage("default")
+	if page == nil {
+		panic("未找到默认标签页")
+	}
+	page.BringToFront()
+	time.Sleep(5 * time.Second)
+	page.Goto("https://www.yaofangwang.com/")
+	time.Sleep(5 * time.Second)
+	browser.CloseTabPage(page.ID())
+	time.Sleep(2 * time.Second)
+	browser.Close()
+}

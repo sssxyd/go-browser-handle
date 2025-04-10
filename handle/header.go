@@ -34,6 +34,7 @@ type Browser interface {
 	NewTabPage(id string, url string) TabPage
 	FindTabPage(id string) TabPage
 	SwitchToTabPage(id string) error
+	CloseTabPage(id string) error
 	IsAlive() bool
 	Close() error
 }

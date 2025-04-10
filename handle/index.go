@@ -3,6 +3,7 @@ package handle
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"runtime"
 	"sync"
 )
@@ -30,8 +31,8 @@ func Stringify[T any](obj T) (string, error) {
 	return string(jsonstr), nil
 }
 
-func StartEdgeBrowser(edgePath string, startPort, endPort int) (Browser, error) {
-	browser, err := newEdgeBrowser(edgePath, startPort, endPort)
+func StartEdgeBrowser(edgePath string, debugPort int) (Browser, error) {
+	browser, err := newEdgeBrowser(edgePath, debugPort)
 	if err != nil {
 		return nil, fmt.Errorf("failed to start Edge browser: %w", err)
 	}
@@ -52,7 +53,7 @@ func FindInstalledBrowsers() map[string]string {
 	return browsers
 }
 
-func GetEdgeBrowser(minPort, maxPort int) (Browser, error) {
+func GetEdgeBrowser(debugPort int) (Browser, error) {
 	edgeLock.Lock()
 	defer edgeLock.Unlock()
 
@@ -66,7 +67,8 @@ func GetEdgeBrowser(minPort, maxPort int) (Browser, error) {
 
 	browsers := FindInstalledBrowsers()
 	if path, ok := browsers["edge"]; ok {
-		browser, err := StartEdgeBrowser(path, minPort, maxPort)
+		log.Printf("Found Edge browser at: %s\n", path)
+		browser, err := StartEdgeBrowser(path, debugPort)
 		if err != nil {
 			return nil, fmt.Errorf("failed to start Edge browser: %w", err)
 		}

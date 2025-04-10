@@ -20,11 +20,10 @@ type EdgeBrowser struct {
 	locker   sync.Mutex
 }
 
-func newEdgeBrowser(edgePath string, startPort, endPort int) (*EdgeBrowser, error) {
-	// 1. 获取一个可用端口，用于调试
-	debugPort, err := getValidPort(startPort, endPort)
-	if err != nil {
-		return nil, fmt.Errorf("无法获取可用端口: %v", err)
+func newEdgeBrowser(edgePath string, debugPort int) (*EdgeBrowser, error) {
+	// 1. 自动安装 Playwright 驱动
+	if err := playwright.Install(); err != nil {
+		return nil, err
 	}
 
 	// 2. 启动 Playwright
