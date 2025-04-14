@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"math/rand"
 	"time"
 
 	"github.com/playwright-community/playwright-go"
@@ -298,4 +299,13 @@ func (t *EdgeTabPage) ApplyCookies(cookies string) error {
 		return fmt.Errorf("无法设置 Cookies: %w", err)
 	}
 	return nil
+}
+
+func (t *EdgeTabPage) SleepRandom(min, max int) {
+	if min < 0 || max < 0 || min > max {
+		log.Printf("无效的随机时间范围: %d - %d", min, max)
+		return
+	}
+	sleepTime := min + rand.Intn(max-min+1)
+	time.Sleep(time.Duration(sleepTime) * time.Millisecond)
 }

@@ -23,6 +23,7 @@ type TabPage interface {
 	Reload() error
 	GetCookies() string
 	ApplyCookies(cookies string) error
+	SleepRandom(min, max int)
 }
 
 type Browser interface {

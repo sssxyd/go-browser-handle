@@ -2,16 +2,10 @@ package handle
 
 import (
 	"reflect"
-
-	"github.com/playwright-community/playwright-go"
 )
 
 // Exported Symbols variable
 var Symbols = map[string]reflect.Value{
-	//playwright-go相关类型和方法
-	"Locator": reflect.ValueOf((*playwright.Locator)(nil)), // Export Locator interface pointer type
-	"Page":    reflect.ValueOf((*playwright.Page)(nil)),    // Export Page interface pointer type
-
 	// 浏览器相关类型和方法
 	"TabPage": reflect.ValueOf((*TabPage)(nil)), // Export TabPage interface pointer type
 	"Browser": reflect.ValueOf((*Browser)(nil)), // Export Browser interface pointer type
@@ -39,6 +33,7 @@ var Symbols = map[string]reflect.Value{
 	"(*TabPage).Reload":           reflect.ValueOf((*TabPage)(nil)).MethodByName("Reload"),
 	"(*TabPage).GetCookies":       reflect.ValueOf((*TabPage)(nil)).MethodByName("GetCookies"),
 	"(*TabPage).ApplyCookies":     reflect.ValueOf((*TabPage)(nil)).MethodByName("ApplyCookies"),
+	"(*TabPage).SleepRandom":      reflect.ValueOf((*TabPage)(nil)).MethodByName("SleepRandom"),
 
 	// Browser的方法
 	"(*Browser).Name":            reflect.ValueOf((*Browser)(nil)).MethodByName("Name"),
