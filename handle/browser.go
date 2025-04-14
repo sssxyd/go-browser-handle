@@ -20,6 +20,9 @@ type TabPage interface {
 	Goto(url string) error
 	Evaluate(expression string, arg ...any) (any, error)
 	Page() playwright.Page
+	Reload() error
+	GetCookies() string
+	ApplyCookies(cookies string) error
 }
 
 type Browser interface {

@@ -2,6 +2,7 @@ package handle
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -265,4 +266,36 @@ func (t *EdgeTabPage) Evaluate(expression string, arg ...any) (any, error) {
 
 func (t *EdgeTabPage) Close() {
 	t.browser.removeTabPage(t.id)
+}
+
+func (t *EdgeTabPage) Reload() error {
+	return t.Goto(t.URL())
+}
+
+func (t *EdgeTabPage) GetCookies() string {
+	cookies, err := t.page.Context().Cookies()
+	if err != nil {
+		return ""
+	}
+	bytes, err := json.Marshal(cookies)
+	if err != nil {
+		return ""
+	}
+	return string(bytes)
+}
+
+func (t *EdgeTabPage) ApplyCookies(cookies string) error {
+	var cookieList []playwright.OptionalCookie
+	if err := json.Unmarshal([]byte(cookies), &cookieList); err != nil {
+		return fmt.Errorf("无法解析 Cookies: %w", err)
+	}
+	// 先删除原有的 Cookies
+	if err := t.page.Context().ClearCookies(); err != nil {
+		log.Printf("无法清除 Cookies: %v", err)
+		return fmt.Errorf("无法清除 Cookies: %w", err)
+	}
+	if err := t.page.Context().AddCookies(cookieList); err != nil {
+		return fmt.Errorf("无法设置 Cookies: %w", err)
+	}
+	return nil
 }
